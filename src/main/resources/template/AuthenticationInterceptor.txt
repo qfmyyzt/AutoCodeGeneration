@@ -1,0 +1,56 @@
+
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+/**
+ * 认证拦截器。
+ * 这个拦截器用于在处理 HTTP 请求之前和之后进行认证相关的操作，确保只有经过认证的用户才能访问受保护的资源。
+ */
+@SuppressWarnings("all")
+public class AuthenticationInterceptor implements HandlerInterceptor {
+
+    /**
+     * 在请求处理之前进行的操作。
+     * @param request  当前的 HTTP 请求对象。
+     * @param response 当前的 HTTP 响应对象。
+     * @param handler  被调用的处理器对象，可以是控制器方法。
+     * @return 如果返回 true，则请求继续被处理；如果返回 false，则请求被中断。
+     * @throws Exception 如果在处理过程中发生异常，则抛出该异常。
+     */
+    @Override
+    public boolean preHandle(@NotNull HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 从请求头中获取名为"access-token"的令牌（token）。
+        String token = request.getHeader("access-token");
+        // 判断令牌是否存在。
+        if (token == null) {
+            // 如果令牌不存在，抛出一个自定义的异常，表示用户未经过认证。
+            throw new BaseException(ResultCodeEnum.ADMIN_LOGIN_AUTH);
+        } else {
+            // 如果令牌存在，解析令牌以获取其中的声明（Claims）。
+            Claims claims = JwtUtil.parseToken(token);
+            // 从声明中获取用户 ID 和用户名，并设置当前登录用户。
+            Long id = claims.get("userId", Long.class);
+            String username = claims.get("username", String.class);
+            LoginUserHolder.setLoginUser(new LoginUser(id, username));
+        }
+        // 表示请求可以继续被处理。
+        return true;
+    }
+
+    /**
+     * 在请求处理完成后进行的操作。
+     * @param request  当前的 HTTP 请求对象。
+     * @param response 当前的 HTTP 响应对象。
+     * @param handler  被调用的处理器对象，可以是控制器方法。
+     * @param ex       如果在请求处理过程中发生异常，则这里是异常对象；如果没有异常，则为 null。
+     * @throws Exception 如果在处理过程中发生异常，则抛出该异常。
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 在请求处理完成后，移除当前登录用户。
+        LoginUserHolder.removeLoginUser();
+    }
+}

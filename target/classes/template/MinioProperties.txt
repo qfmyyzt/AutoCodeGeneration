@@ -1,0 +1,28 @@
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import lombok.Data;
+
+// 启用配置属性绑定，将配置文件中的相关属性绑定到这个类上
+@EnableConfigurationProperties(MinioProperties.class)
+@ConditionalOnProperty(name = "minio")
+@Data
+@SuppressWarnings("all")
+public class MinioProperties {
+
+    // Minio服务的端点地址，例如：http://minio.example.com:9000
+    // 配置文件中对应的属性名应该是类似minio.endpoint的形式，用于指定Minio服务的访问地址
+    private String endpoint;
+
+    // Minio的访问密钥，用于在访问Minio服务时进行身份验证
+    // 配置文件中对应的属性名应该是类似minio.accessKey的形式，存储合法的访问密钥值
+    private String accessKey;
+
+    // Minio的秘密密钥，与访问密钥一起用于身份验证
+    // 配置文件中对应的属性名应该是类似minio.secretKey的形式，存储对应的秘密密钥值
+    private String secretKey;
+
+    // 在Minio中要使用的存储桶名称
+    // 配置文件中对应的属性名应该是类似minio.bucketName的形式，指定要操作的存储桶名字
+    private String bucketName;
+}

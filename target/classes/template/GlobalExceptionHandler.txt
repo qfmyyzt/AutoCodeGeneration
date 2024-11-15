@@ -1,0 +1,43 @@
+
+import org.jetbrains.annotations.NotNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/**
+ * 全局异常处理类
+ */
+@RestControllerAdvice
+@Slf4j
+@SuppressWarnings("all")
+public class GlobalExceptionHandler {
+
+    /**
+     * 全局异常处理函数
+     * 当控制器方法中出现任何异常时，此函数将被调用以处理异常。
+     * @param e 抛出的异常对象
+     * @return 包含错误信息的Result对象
+     */
+    @ExceptionHandler(Exception.class) // 异常处理器注解，指定处理的异常类型为Exception
+    public Result handleException(@NotNull Exception e) {
+        // 打印异常堆栈信息，用于调试
+        e.printStackTrace();
+        // 返回表示操作失败的Result对象
+        return Result.fail();
+    }
+
+    /**
+     * 全局异常处理函数，专门处理 LeaseException 异常
+     * 当控制器方法中出现 LeaseException 异常时，此函数将被调用以处理该异常。
+     * @param e 抛出的 LeaseException 异常对象
+     * @return 包含错误码和错误信息的 Result 对象
+     */
+    @ExceptionHandler(BaseException.class) // 异常处理器注解，指定处理的异常类型为 LeaseException
+    public Result handleLeaseException(@NotNull BaseException e) {
+        // 打印异常堆栈信息，用于调试
+        e.printStackTrace();
+        // 返回包含错误码和错误信息的 Result 对象
+        return Result.fail(e.getCode(), e.getMessage());
+    }
+
+}

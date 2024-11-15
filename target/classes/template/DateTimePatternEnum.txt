@@ -1,0 +1,18 @@
+@SuppressWarnings("all")
+public enum DateTimePatternEnum {
+    //年月日时分秒
+    YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss"),
+    //年月日
+    YYYY_MM_DD("yyyy-MM-dd"),
+    //年月日
+    YYYYMMDD("yyyyMMdd");
+    //定义一个用来存放日期格式的字符串
+    private  String pattern;
+
+     DateTimePatternEnum(String pattern) {
+        this.pattern = pattern;
+     }
+     public String getPattern() {
+        return pattern;
+     }
+}

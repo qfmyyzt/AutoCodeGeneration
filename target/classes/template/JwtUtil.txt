@@ -1,0 +1,52 @@
+
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
+import java.util.Date;
+@SuppressWarnings("all")
+public class JwtUtil {
+    //token有效期
+    private static long tokenExpiration = 60 * 60 * 10000L;
+    // 生成用于token签名的SecretKey
+    private static SecretKey tokenSignKey = Keys.hmacShaKeyFor("M0PKKI6pYGVWWfDZw90a0lTpGYX1d4AQ".getBytes());
+
+    /**
+     * 解析token获取用户信息
+     * @param userId
+     * @param username
+     * @return
+     */
+    public static String createToken(Long userId, String username) {
+              String token = Jwts.builder().
+                      setSubject("Login_INFO").
+                      setExpiration(new Date(System.currentTimeMillis() + tokenExpiration)).
+                      claim("userId", userId).
+                      claim("username", username).
+                      signWith(tokenSignKey, SignatureAlgorithm.HS256).
+                      compact();
+              return token;
+          }
+
+    /**
+         * 校验token是否有效
+         * @param token
+         */
+        public static Claims parseToken(String token)
+              {
+                 try {
+
+                     JwtParser build = Jwts.parserBuilder().setSigningKey(tokenSignKey).build();
+                     Jws<Claims> claimsJws = build.parseClaimsJws(token);
+                     Claims body = claimsJws.getBody();
+                     return body;
+                 }catch (ExpiredJwtException e)
+                 {
+                     //token过期
+                     throw new BaseException(ResultCodeEnum.TOKEN_EXPIRED);
+                 }catch (JwtException e)
+                 {
+                     //token无效
+                     throw new BaseException(ResultCodeEnum.TOKEN_INVALID);
+                 }
+              }
+}

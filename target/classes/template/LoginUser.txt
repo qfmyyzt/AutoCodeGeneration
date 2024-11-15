@@ -1,0 +1,14 @@
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+/**
+ * 登录用户信息 ——>一个用户对应一个唯一的id,通过这个id，可以获取到用户的所有信息
+ */
+@Data
+@AllArgsConstructor
+@SuppressWarnings("all")
+public class LoginUser {
+
+    private Long userId;
+    private String username;
+}

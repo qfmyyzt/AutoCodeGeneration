@@ -1,0 +1,27 @@
+import lombok.Data;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * 自定义异常类->当需要抛出异常时，抛出此异常
+ */
+@Data
+@SuppressWarnings("all")
+public class BaseException extends RuntimeException {
+    //状态码
+    private Integer code;
+    //错误信息
+    private String msg;
+
+    //构造方法
+    public BaseException(Integer code, String msg) {
+        super(msg);
+        this.code = code;
+        this.msg = msg;
+    }
+
+    public BaseException(@NotNull ResultCodeEnum resultCodeEnum) {
+        super(resultCodeEnum.getMessage());
+        this.code = resultCodeEnum.getCode();
+        this.msg = resultCodeEnum.getMessage();
+    }
+}

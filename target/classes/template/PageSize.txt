@@ -1,0 +1,20 @@
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+/**
+ * PageSize枚举类
+ */
+@SuppressWarnings("all")
+@AllArgsConstructor
+public enum PageSize {
+    SIZE15(15),
+    SIZE20(20),
+    SIZE30(30),
+    SIZE40(40),
+    SIZE50(50);
+     //每页显示的记录数
+     int size;
+     public int getSize() {
+       return size;
+     }
+}

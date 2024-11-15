@@ -1,0 +1,22 @@
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+/**
+ * 生成验证码类
+ */
+@Data
+@AllArgsConstructor
+@SuppressWarnings("all")
+public class Captcha {
+
+    /**
+     * 这个字段表示验证码图片信息，通常是一个 Base64 编码的字符串或者其他表示图片数据的格式。
+     */
+    private String image;
+
+    /**
+     * 这个字段表示验证码的唯一标识 key，通常用于在验证验证码时与用户提交的验证码值进行关联。
+     */
+    private String key;
+}

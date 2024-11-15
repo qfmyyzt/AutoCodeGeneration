@@ -1,0 +1,58 @@
+
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
+import java.util.Date;
+@SuppressWarnings("all")
+public class JwtUtil {
+    //token有效期
+    private static long tokenExpiration = 60 * 60 * 10000L;
+    // 生成用于token签名的SecretKey
+    private static SecretKey tokenSignKey = Keys.hmacShaKeyFor("M0PKKI6pYGVWWfDZw90a0lTpGYX1d4AQ".getBytes());
+
+    /**
+     * 解析token获取用户信息
+     * @param userId
+     * @param username
+     * @return
+     */
+    public static String createToken(Long userId, String username) {
+              String token = Jwts.builder().
+                      setSubject("Login_INFO").
+                      setExpiration(new Date(System.currentTimeMillis() + tokenExpiration)).
+                      claim("userId", userId).
+                      claim("username", username).
+                      signWith(tokenSignKey, SignatureAlgorithm.HS256).
+                      compact();
+              return token;
+          }
+
+    /**
+         * 校验token是否有效
+         * @param token
+         */
+        public static Claims parseToken(String token)
+              {
+                 try {
+
+                    // 创建一个JwtParser的构建器，并设置签名密钥
+                    JwtParser build = Jwts.parserBuilder().setSigningKey(tokenSignKey).build();
+                    // 使用构建好的JwtParser来解析传入的token字符串，并返回一个包含声明（Claims）的Jws对象
+                    Jws<Claims> claimsJws = build.parseClaimsJws(token);
+                    // 从解析得到的Jws对象中获取包含各种声明信息的Claims对象
+                    // Claims对象中包含了如用户信息、过期时间等在JWT令牌中设置的相关信息
+                    Claims body = claimsJws.getBody();
+                    // 将获取到的包含声明信息的Claims对象返回，以便在其他地方使用这些信息
+                    // 比如验证用户身份、获取用户相关属性等
+                    return body;
+                 }catch (ExpiredJwtException e)
+                 {
+                     //token过期
+                     throw new BaseException(ResultCodeEnum.TOKEN_EXPIRED);
+                 }catch (JwtException e)
+                 {
+                     //token无效
+                     throw new BaseException(ResultCodeEnum.TOKEN_INVALID);
+                 }
+              }
+}

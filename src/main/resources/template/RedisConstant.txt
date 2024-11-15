@@ -1,0 +1,41 @@
+
+/**
+ * Redis 相关常量类。
+ * 该类定义了在系统中与 Redis 存储相关的各种常量，方便在不同的模块中统一使用和管理 Redis 的键前缀和超时时间等配置。
+ */
+@SuppressWarnings("all")
+public class RedisConstant {
+
+    /**
+     * 管理员登录相关的 Redis 键前缀。
+     * 用于存储与管理员登录状态或信息相关的数据，通过这个前缀可以方便地识别和管理管理员登录相关的 Redis 数据。
+     * admin:login ->是存放在redis里面的key的名称可以自定义
+     */
+    public static final String ADMIN_LOGIN_PREFIX = "admin:login:";
+
+    /**
+     * 管理员登录验证码在 Redis 中的超时时间（单位：秒）。
+     * 表示管理员登录时生成的验证码在 Redis 中存储的有效时间，超过这个时间后验证码将失效。
+     */
+    public static final Integer ADMIN_LOGIN_CAPTCHA_TTL_SEC = 60;
+
+    /**
+     * 移动端（APP）登录相关的 Redis 键前缀。
+     * 用于存储与移动端登录状态或信息相关的数据，通过这个前缀可以方便地识别和管理移动端登录相关的 Redis 数据。
+     */
+    public static final String APP_LOGIN_PREFIX = "app:login:";
+
+    /**
+     * 移动端（APP）登录时，再次发送验证码的时间间隔（单位：秒）。
+     * 规定了在移动端登录过程中，用户请求再次发送验证码的最小时间间隔，防止频繁请求发送验证码。
+     */
+    public static final Integer APP_LOGIN_CODE_RESEND_TIME_SEC = 60;
+
+    /**
+     * 移动端（APP）登录验证码在 Redis 中的超时时间（单位：秒）。
+     * 表示移动端登录时生成的验证码在 Redis 中存储的有效时间，超过这个时间后验证码将失效。
+     */
+    public static final Integer APP_LOGIN_CODE_TTL_SEC = 60 * 10;
+
+
+}

@@ -1,0 +1,33 @@
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+/**
+ * 阿里云短信服务的配置属性类。
+ * 通过使用 @ConfigurationProperties 注解，将配置文件中以 "aliyun.sms" 为前缀的属性值绑定到这个类的成员变量上。
+ */
+@Data
+@ConfigurationProperties(prefix = "aliyun.sms")
+@SuppressWarnings("all")
+public class AliyunSMSProperties {
+
+    /**
+     * 阿里云的访问密钥 ID。
+     * 在阿里云控制台中生成的用于标识用户身份的访问密钥之一。
+     * 配置文件中对应的属性名应为 "aliyun.sms.accessKeyId"。
+     */
+    private String accessKeyId;
+
+    /**
+     * 阿里云的访问密钥密码。
+     * 在阿里云控制台中生成的与访问密钥 ID 配对使用的密钥密码，用于进行身份验证和授权。
+     * 配置文件中对应的属性名应为 "aliyun.sms.accessKeySecret"。
+     */
+    private String accessKeySecret;
+
+    /**
+     * 阿里云短信服务的端点地址。
+     * 用于指定与阿里云短信服务进行通信的地址，不同的地域可能有不同的端点地址。
+     * 配置文件中对应的属性名应为 "aliyun.sms.endpoint"。
+     */
+    private String endpoint;
+}

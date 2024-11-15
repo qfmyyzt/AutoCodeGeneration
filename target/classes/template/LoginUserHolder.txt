@@ -1,0 +1,32 @@
+/**
+ * 定义一个线程变量类,用来保存当前用户信息
+ */
+@SuppressWarnings("all")
+public class LoginUserHolder {
+    //定义一个线程变量
+    public static final ThreadLocal<LoginUser> loginUserHolder = new ThreadLocal<>();
+
+    /**
+     * 把用户信息保存到当前变量里面
+     * @param loginUser
+     */
+    public static void setLoginUser(LoginUser loginUser) {
+        loginUserHolder.set(loginUser);
+    }
+
+    /**
+     * 获取当前用户信息
+     * @return
+     */
+    public static LoginUser getLoginUser() {
+        return loginUserHolder.get();
+    }
+
+    /**
+     * 移除当前用户信息
+     */
+    public static void removeLoginUser() {
+        loginUserHolder.remove();
+    }
+
+}

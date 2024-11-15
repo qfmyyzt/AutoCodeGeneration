@@ -1,0 +1,51 @@
+import com.aliyun.teaopenapi.models.Config;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import com.aliyun.dysmsapi20170525.Client;
+
+/**
+ * 阿里云短信服务的配置类。
+ */
+@SuppressWarnings("all")
+@Configuration
+// 启用配置属性绑定，允许将 AliyunSMSProperties 类中的属性值从配置文件中注入进来
+@EnableConfigurationProperties(AliyunSMSProperties.class)
+// 当配置文件中有名为"aliyun.sms.endpoint"的属性时，这个配置类才生效
+@ConditionalOnProperty(name = "aliyun.sms.endpoint")
+public class AliyunSMSConfig {
+
+    /**
+     * 自动注入阿里云短信服务的属性配置类实例。
+     * 通过这个实例可以获取在配置文件中配置的阿里云短信服务相关的属性值。
+     */
+    @Autowired
+    private AliyunSMSProperties aliyunSMSProperties;
+
+    /**
+     * 创建阿里云短信服务的客户端实例的方法，并将其注册为 Spring Bean。
+     * @return 阿里云短信服务客户端实例。
+     */
+    @Bean
+    public Client createClient() {
+        // 创建一个阿里云 OpenAPI 的配置对象
+        Config config = new Config();
+        // 设置访问密钥 ID，从配置类中获取对应的值
+        config.setAccessKeyId(aliyunSMSProperties.getAccessKeyId());
+        // 设置访问密钥密码，从配置类中获取对应的值
+        config.setAccessKeySecret(aliyunSMSProperties.getAccessKeySecret());
+        // 设置端点地址，从配置类中获取对应的值
+        config.setEndpoint(aliyunSMSProperties.getEndpoint());
+        Client client = null;
+        try {
+            // 使用配置对象创建阿里云短信服务的客户端实例
+            client = new Client(config);
+        } catch (Exception e) {
+            // 如果创建过程中出现异常，将其包装为运行时异常抛出
+            throw new RuntimeException(e);
+        }
+        return client;
+    }
+}

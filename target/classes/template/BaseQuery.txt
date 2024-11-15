@@ -1,0 +1,22 @@
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.io.Serializable;
+
+/**
+ * 生成一个query的基类
+ */
+@SuppressWarnings("all")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class BaseQuery implements Serializable {
+    // 声明一个SimplePage类型的对象，用于分页信息的封装
+    private SimplePage simplePage;
+    // 当前页码
+    private Integer pageNo;
+    // 每页显示的数据条数
+    private Integer pageSize;
+    // 排序字段标识
+    private Integer orderBy;
+}

@@ -1,0 +1,37 @@
+import io.minio.MinioClient;
+import jakarta.annotation.Resource;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * minio配置类
+ */
+@Configuration
+@EnableConfigurationProperties(MinioProperties.class)
+@ConditionalOnProperty(name = "minio.endpoint")
+@SuppressWarnings("all")
+public class MinioConfig {
+    // 注入MinioProperties对象
+    @Resource
+    private MinioProperties mp;
+
+    /**
+     * 创建一个MinioClient的Bean对象
+     * @return MinioClient对象
+     */
+    @Bean
+    public MinioClient minioTemplate(){
+       // 创建MinioClient对象
+        // 使用MinioClient.builder()方法开始构建MinioClient对象
+        return  MinioClient.builder()
+                // 设置Minio服务的端点
+                .endpoint(mp.getEndpoint())
+                // 设置访问Minio服务的凭证，包括访问密钥和秘密密钥
+                .credentials(mp.getAccessKey(), mp.getSecretKey())
+                // 完成MinioClient对象的构建
+                .build();
+    }
+
+}

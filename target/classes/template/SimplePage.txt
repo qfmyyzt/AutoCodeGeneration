@@ -1,0 +1,106 @@
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * 分页查询对象
+ */
+@Data
+@NoArgsConstructor
+@SuppressWarnings("all")
+public class SimplePage {
+    // 每页显示的记录数
+    private int pageNo;
+    // 当前页数
+    private int pageSize;
+    // 总记录数
+    private int countTotal;
+    // 总页数
+    private int pageTotal;
+    // 查询起始位置
+    private int start;
+    // 查询结束位置
+    private int end;
+    /**
+     * SimplePage类的构造函数
+     * @param pageNo 当前页码，如果为null，则默认为0
+     * @param countTotal 总记录数
+     * @param pageSize 每页记录数
+     */
+    public SimplePage(Integer pageNo, int countTotal, int pageSize) {
+        // 判断传入的页码是否为null，如果是，则将页码设置为0
+        if(null == pageNo)
+        {
+            pageNo = 0;
+        }
+        // 将处理后的页码赋值给成员变量pageNo
+        this.pageNo = pageNo;
+        // 将总记录数赋值给成员变量countTotal
+        this.countTotal = countTotal;
+        // 将每页记录数赋值给成员变量pageSize
+        this.pageSize = pageSize;
+    }
+
+    /**
+     * SimplePage类的构造函数，用于初始化起始位置和结束位置。
+     * @param start 起始位置
+     * @param end   结束位置
+     */
+    public SimplePage(int start, int end){
+        // 将传入的起始位置赋值给成员变量start
+        this.start = start;
+        // 将传入的结束位置赋值给成员变量end
+        this.end = end;
+    }
+
+
+    /**
+     * 对分页参数进行初始化或调整
+     * 如果页面大小pageSize小于0，则将其设置为PageSize.SIZE20.getSize()的值。
+     * 如果总记录数countTotal大于0，则计算总页数pageTotal。
+     *   如果countTotal能被pageSize整除，则pageTotal等于countTotal除以pageSize的结果；
+     *   否则，pageTotal等于countTotal除以pageSize的结果加1。
+     * 如果总记录数countTotal小于等于0，则总页数pageTotal被设置为1。
+     * 如果当前页码pageNo小于等于1，则将pageNo设置为1。
+     * 如果当前页码pageNo大于总页数pageTotal，则将pageNo设置为pageTotal。
+     * 计算起始位置start和结束位置end。
+     *   起始位置start等于(pageNo - 1) * pageSize。
+     *   结束位置end等于start + pageSize。
+     */
+    public void action()
+    {
+        // 如果页面大小pageSize小于0，则将其设置为PageSize.SIZE20.getSize()的值
+        if(this.pageSize < 0 )
+        {
+            this.pageSize = PageSize.SIZE20.getSize();
+        }
+
+        // 如果总记录数countTotal大于0，则计算总页数pageTotal
+        if(this.countTotal > 0 )
+        {
+            // 如果countTotal能被pageSize整除，则pageTotal等于countTotal除以pageSize的结果；否则，pageTotal等于countTotal除以pageSize的结果加1
+            this.pageTotal = this.countTotal % this.pageSize == 0? this.countTotal / this.pageSize
+                    : this.countTotal / this.pageSize + 1;
+        }
+        // 如果总记录数countTotal小于等于0，则总页数pageTotal被设置为1
+        else
+        {
+            pageTotal = 1;
+        }
+
+        // 如果当前页码pageNo小于等于1，则将pageNo设置为1
+        if(this.pageNo <= 1 )
+        {
+            this.pageNo = 1;
+        }
+        // 如果当前页码pageNo大于总页数pageTotal，则将pageNo设置为pageTotal
+        else if(this.pageNo > this.pageTotal)
+        {
+            this.pageNo = this.pageTotal;
+        }
+        // 计算起始位置start和结束位置end
+        // 起始位置start等于(pageNo - 1) * pageSize
+        this.start = (this.pageNo - 1) * this.pageSize;
+        // 结束位置end等于start + pageSize
+        this.end = this.start + this.pageSize;
+    }
+}
